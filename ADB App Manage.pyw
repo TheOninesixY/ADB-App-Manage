@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog, messagebox, simpledialog
 import subprocess
 import os
 import threading
+import sv_ttk # 导入 sv_ttk 库
 
 class ADBInstaller:
     def __init__(self, root):
@@ -18,10 +19,31 @@ class ADBInstaller:
             pass
         self.root.geometry("600x600")
         self.root.resizable(True, True)
+        self.current_theme = None # 初始主题未设置，将在_apply_theme中加载或设置为默认
+        self._apply_theme() # 应用主题 (根据保存的设置或默认值)
         
         # 设置主窗口背景色 - WinUI风格
-        self.root.configure(bg='#f2f2f2')
+        # self.root.configure(bg='#f2f2f2') # 交给 sv_ttk 处理主题
         
+    def _apply_theme(self):
+        """
+        应用当前主题设置。
+        如果current_theme未设置，则尝试从设置加载；如果加载失败，则使用默认主题。
+        """
+        DEFAULT_THEME = "dark" # 定义默认主题
+        
+        if self.current_theme is None:
+            # 在此处可以添加从配置文件加载主题的逻辑
+            # 暂时直接设置为默认主题
+            self.current_theme = DEFAULT_THEME
+            
+        try:
+            sv_ttk.set_theme(self.current_theme)
+        except Exception as e:
+            self.log(f"设置主题失败: {self.current_theme}。回退到默认主题 {DEFAULT_THEME}。错误: {e}")
+            self.current_theme = DEFAULT_THEME
+            sv_ttk.set_theme(self.current_theme) # 尝试设置默认主题
+
         # 设置样式 - WinUI风格
         self.style = ttk.Style()
         
@@ -34,83 +56,83 @@ class ADBInstaller:
         winui_border = '#e0e0e0'
         
         # 配置Tkinter默认对话框的样式
-        self.root.option_add('*Dialog.msg.font', 'Segoe UI 10')
-        self.root.option_add('*Dialog.btn.font', 'Segoe UI 10')
-        self.root.option_add('*Dialog.background', winui_gray)
-        self.root.option_add('*Dialog.foreground', winui_text)
-        self.root.option_add('*Dialog.button.background', winui_gray)
-        self.root.option_add('*Dialog.button.foreground', winui_text)
-        self.root.option_add('*Dialog.button.borderwidth', 1)
-        self.root.option_add('*Dialog.button.relief', 'flat')
-        self.root.option_add('*Dialog.button.highlightbackground', winui_gray)
+        # self.root.option_add('*Dialog.msg.font', 'Segoe UI 10') # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.btn.font', 'Segoe UI 10') # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.background', winui_gray) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.foreground', winui_text) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.button.background', winui_gray) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.button.foreground', winui_text) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.button.borderwidth', 1) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.button.relief', 'flat') # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.button.highlightbackground', winui_gray) # 交给 sv_ttk 处理主题
         
         # 配置全局样式
-        self.style.configure('.', 
-                           font=('Segoe UI', 10),
-                           foreground=winui_text,
-                           background=winui_gray)
+        # self.style.configure('.',
+        #                    font=('Segoe UI', 10),
+        #                    foreground=winui_text,
+        #                    background=winui_gray)
         
         # 配置按钮样式
-        self.style.configure('TButton', 
-                           padding=8, 
-                           relief="flat", 
-                           background=winui_gray,
-                           foreground=winui_text,
-                           borderwidth=1,
-                           bordercolor=winui_border)
+        # self.style.configure('TButton',
+        #                    padding=8,
+        #                    relief="flat",
+        #                    background=winui_gray,
+        #                    foreground=winui_text,
+        #                    borderwidth=1,
+        #                    bordercolor=winui_border)
         
         # 按钮悬停效果
-        self.style.map('TButton', 
-                      background=[('active', winui_dark_gray)],
-                      bordercolor=[('active', winui_blue)])
+        # self.style.map('TButton',
+        #               background=[('active', winui_dark_gray)],
+        #               bordercolor=[('active', winui_blue)])
         
         # 配置标签样式
-        self.style.configure('TLabel', 
-                           padding=6,
-                           foreground=winui_text,
-                           background=winui_gray)
+        # self.style.configure('TLabel',
+        #                    padding=6,
+        #                    foreground=winui_text,
+        #                    background=winui_gray)
         
         # 配置输入框样式
-        self.style.configure('TEntry', 
-                           padding=6,
-                           relief="flat",
-                           borderwidth=1,
-                           bordercolor=winui_border,
-                           background='white')
+        # self.style.configure('TEntry',
+        #                    padding=6,
+        #                    relief="flat",
+        #                    borderwidth=1,
+        #                    bordercolor=winui_border,
+        #                    background='white')
         
         # 配置标签框架样式
-        self.style.configure('TLabelframe', 
-                           padding=10,
-                           foreground=winui_text,
-                           background=winui_gray)
+        # self.style.configure('TLabelframe',
+        #                    padding=10,
+        #                    foreground=winui_text,
+        #                    background=winui_gray)
         
-        self.style.configure('TLabelframe.Label', 
-                           font=('Segoe UI', 10, 'bold'),
-                           padding=(5, 0, 0, 0))
+        # self.style.configure('TLabelframe.Label',
+        #                    font=('Segoe UI', 10, 'bold'),
+        #                    padding=(5, 0, 0, 0))
         
         # 配置笔记本（选项卡）样式
-        self.style.configure('TNotebook', 
-                           background=winui_gray)
+        # self.style.configure('TNotebook',
+        #                    background=winui_gray)
         
-        self.style.configure('TNotebook.Tab', 
-                           padding=3,
-                           font=('Segoe UI', 10),
-                           background=winui_dark_gray,
-                           foreground=winui_text)
+        # self.style.configure('TNotebook.Tab',
+        #                    padding=3,
+        #                    font=('Segoe UI', 10),
+        #                    background=winui_dark_gray,
+        #                    foreground=winui_text)
         
         # 选项卡选中效果
-        self.style.map('TNotebook.Tab', 
-                      background=[('selected', 'white')],
-                      foreground=[('selected', winui_blue)])
+        # self.style.map('TNotebook.Tab',
+        #               background=[('selected', 'white')],
+        #               foreground=[('selected', winui_blue)])
         
         # 配置滚动条样式
-        self.style.configure('Vertical.TScrollbar', 
-                           background=winui_gray,
-                           bordercolor=winui_border)
+        # self.style.configure('Vertical.TScrollbar',
+        #                    background=winui_gray,
+        #                    bordercolor=winui_border)
         
-        self.style.configure('Horizontal.TScrollbar', 
-                           background=winui_gray,
-                           bordercolor=winui_border)
+        # self.style.configure('Horizontal.TScrollbar',
+        #                    background=winui_gray,
+        #                    bordercolor=winui_border) # 交给 sv_ttk 处理主题
         
         # 创建主框架
         self.main_frame = ttk.Frame(root, padding="10")
@@ -176,11 +198,11 @@ class ADBInstaller:
         
         # 状态文本框 - WinUI风格
         self.status_text = tk.Text(status_frame, 
-                                 height=10, 
-                                 bg='white', 
-                                 fg='#333333', 
+                                 height=10,
+                                 bg='#2a2a2a', # 深色背景
+                                 fg='#ffffff', # 白色前景
                                  font=('Segoe UI', 10),
-                                 borderwidth=1, 
+                                 borderwidth=1,
                                  relief='solid',
                                  highlightthickness=0,
                                  insertbackground='#0078d4')
@@ -217,12 +239,16 @@ class ADBInstaller:
         self.ip_var = tk.StringVar(value="127.0.0.1")
         self.ip_entry = ttk.Entry(conn_frame, textvariable=self.ip_var)
         self.ip_entry.grid(row=0, column=1, sticky=tk.W+tk.E, pady=5)
+        self.ip_entry.bind('<FocusOut>', lambda event: self.save_settings())
+        self.ip_entry.bind('<Return>', lambda event: self.save_settings())
         
         # 端口输入
         ttk.Label(conn_frame, text="端口:").grid(row=0, column=2, sticky=tk.W, pady=5)
         self.port_var = tk.StringVar(value="58526")
         self.port_entry = ttk.Entry(conn_frame, textvariable=self.port_var)
         self.port_entry.grid(row=0, column=3, sticky=tk.W+tk.E, pady=5)
+        self.port_entry.bind('<FocusOut>', lambda event: self.save_settings())
+        self.port_entry.bind('<Return>', lambda event: self.save_settings())
         
         # 配置列权重，使输入框随窗口大小调整
         conn_frame.columnconfigure(1, weight=1)
@@ -266,6 +292,8 @@ class ADBInstaller:
         self.window_size_var = tk.StringVar(value="600x600")
         self.window_size_entry = ttk.Entry(window_size_frame, textvariable=self.window_size_var)
         self.window_size_entry.grid(row=0, column=1, sticky=tk.W+tk.E, pady=5, padx=5)
+        self.window_size_entry.bind('<FocusOut>', lambda event: self.save_settings())
+        self.window_size_entry.bind('<Return>', lambda event: self.save_settings())
         
         # 识别当前窗口大小按钮
         identify_btn = ttk.Button(window_size_frame, text="识别当前大小", command=self.identify_window_size)
@@ -295,10 +323,24 @@ class ADBInstaller:
             command=self.on_show_emoji_toggle
         )
         self.show_emoji_switch.pack(side=tk.LEFT)
+
+        # 主题设置
+        theme_frame = ttk.LabelFrame(custom_frame, text="主题", padding="10")
+        theme_frame.pack(fill=tk.X, pady=5)
+
+        ttk.Label(theme_frame, text="选择主题:").pack(side=tk.LEFT, padx=10)
+
+        self.theme_var = tk.StringVar(value=self.current_theme) # 根据当前主题初始化
+        self.light_theme_radio = ttk.Radiobutton(theme_frame, text="亮色", variable=self.theme_var, value="light", command=self.on_theme_change)
+        self.light_theme_radio.pack(side=tk.LEFT, padx=5)
+
+        self.dark_theme_radio = ttk.Radiobutton(theme_frame, text="深色", variable=self.theme_var, value="dark", command=self.on_theme_change)
+        self.dark_theme_radio.pack(side=tk.LEFT, padx=5)
         
-        # 保存按钮
-        save_btn = ttk.Button(settings_frame, text="保存设置", command=self.save_settings)
-        save_btn.pack(fill=tk.X, pady=10, padx=10)
+        # 恢复默认设置按钮
+        restore_default_btn = ttk.Button(settings_frame, text="恢复默认设置", command=self.restore_all_settings_with_confirmation)
+        restore_default_btn.pack(fill=tk.X, pady=10, padx=10)
+        
     
 
     
@@ -562,6 +604,12 @@ class ADBInstaller:
                                 self.window_size_var.set(value)
                             # 应用窗口大小
                             self.root.geometry(value)
+                        elif line.startswith('theme='):
+                            value = line.split('=', 1)[1]
+                            self.current_theme = value
+                            if hasattr(self, 'theme_var'):
+                                self.theme_var.set(value)
+                            sv_ttk.set_theme(value) # 应用主题
                 self.log("设置加载成功")
                 
                 # 如果启用了自动连接，尝试连接设备
@@ -579,37 +627,38 @@ class ADBInstaller:
         # 使用脚本所在目录作为基础路径
         script_dir = os.path.dirname(os.path.abspath(__file__))
         settings_file = os.path.join(script_dir, "data")
-        try:
-            self.auto_connect = self.auto_connect_var.get()
-            self.show_emoji = self.show_emoji_var.get()
-            ip = self.ip_var.get()
-            port = self.port_var.get()
-            
-            window_size = self.window_size_var.get()
-            # 应用窗口大小
-            self.root.geometry(window_size)
-            with open(settings_file, 'w', encoding='utf-8') as f:
-                f.write(f"auto_connect={self.auto_connect}\n")
-                f.write(f"show_emoji={self.show_emoji}\n")
-                f.write(f"ip={ip}\n")
-                f.write(f"port={port}\n")
-                f.write(f"window_size={window_size}\n")
-            
-            self.log("设置保存成功")
-            self.show_info_dialog("成功", "设置保存成功！")
-        except Exception as e:
-            self.log(f"保存设置出错: {str(e)}")
-            self.show_error_dialog("错误", f"保存设置出错: {str(e)}")
+        self.auto_connect = self.auto_connect_var.get()
+        self.show_emoji = self.show_emoji_var.get()
+        ip = self.ip_var.get()
+        port = self.port_var.get()
+        
+        window_size = self.window_size_var.get()
+        # 应用窗口大小
+        self.root.geometry(window_size)
+        with open(settings_file, 'w', encoding='utf-8') as f:
+            f.write(f"auto_connect={self.auto_connect}\n")
+            f.write(f"show_emoji={self.show_emoji}\n")
+            f.write(f"ip={ip}\n")
+            f.write(f"port={port}\n")
+            f.write(f"window_size={window_size}\n")
+            f.write(f"theme={self.current_theme}\n") # 保存主题设置
     
     def on_auto_connect_toggle(self):
         """自动连接开关切换时的回调"""
         # 这里可以添加一些即时反馈，比如显示提示信息
-        pass
+        self.save_settings()
     
     def on_show_emoji_toggle(self):
         """显示emoji开关切换时的回调"""
         # 这里可以添加一些即时反馈，比如显示提示信息
-        pass
+        self.save_settings()
+    
+    def on_theme_change(self):
+        """主题切换时的回调"""
+        selected_theme = self.theme_var.get()
+        sv_ttk.set_theme(selected_theme)
+        self.current_theme = selected_theme
+        self.save_settings()
     
     def identify_window_size(self):
         """识别当前窗口大小并填入输入框"""
@@ -625,6 +674,11 @@ class ADBInstaller:
         self.root.geometry(default_size)
         self.log(f"已恢复默认窗口大小: {default_size}")
     
+    def restore_all_settings_with_confirmation(self):
+        """恢复全部设置到默认值（带确认）"""
+        if self.ask_yes_no_dialog("确认恢复", "确定将所有设置恢复为默认值吗？"):
+            self.restore_all_settings()
+
     def restore_all_settings(self):
         """恢复全部设置到默认值"""
         # 恢复默认窗口大小
@@ -638,8 +692,6 @@ class ADBInstaller:
         self.ip_var.set("127.0.0.1")
         self.port_var.set("58526")
         
-        # 保存默认设置
-        self.save_settings()
         self.log("已恢复全部设置到默认值")
     
     def create_package_section(self):
@@ -671,15 +723,15 @@ class ADBInstaller:
         
         # 包名列表框 - WinUI风格
         self.package_listbox = tk.Listbox(list_frame, 
-                                         height=15, 
-                                         bg='white', 
-                                         fg='#333333', 
+                                         height=15,
+                                         bg='#2a2a2a', # 深色背景
+                                         fg='#ffffff', # 白色前景
                                          font=('Segoe UI', 10),
-                                         borderwidth=1, 
+                                         borderwidth=1,
                                          relief='solid',
                                          highlightthickness=0,
-                                         selectbackground='#e6f3ff',
-                                         selectforeground='#0078d4')
+                                         selectbackground='#4a4a4a', # 选中背景深色
+                                         selectforeground='#ffffff') # 选中前景白色
         self.package_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
         # 滚动条
@@ -693,7 +745,7 @@ class ADBInstaller:
         self.package_listbox.bind('<Double-1>', self.on_package_double_click)
         
         # 创建右键菜单
-        self.package_menu = tk.Menu(self.root, tearoff=0)
+        self.package_menu = tk.Menu(self.root, tearoff=0, bg='#2a2a2a', fg='#ffffff', activebackground='#4a4a4a', activeforeground='#ffffff', border=1, relief='solid') # 深色主题适配
         self.package_menu.add_command(label="卸载", command=self.uninstall_selected_package)
         self.package_menu.add_command(label="复制包名", command=self.copy_package_name)
         
@@ -877,15 +929,15 @@ class ADBInstaller:
         
         # 文件列表
         self.file_listbox = tk.Listbox(list_frame, 
-                                     height=15, 
-                                     bg='white', 
-                                     fg='#333333', 
+                                     height=15,
+                                     bg='#2a2a2a', # 深色背景
+                                     fg='#ffffff', # 白色前景
                                      font=('Segoe UI', 10),
-                                     borderwidth=1, 
+                                     borderwidth=1,
                                      relief='solid',
                                      highlightthickness=0,
-                                     selectbackground='#e6f3ff',
-                                     selectforeground='#0078d4')
+                                     selectbackground='#4a4a4a', # 选中背景深色
+                                     selectforeground='#ffffff') # 选中前景白色
         self.file_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
         # 滚动条
@@ -899,7 +951,7 @@ class ADBInstaller:
         self.file_listbox.bind('<Double-1>', self.on_file_double_click)
         
         # 创建右键菜单
-        self.file_menu = tk.Menu(self.root, tearoff=0)
+        self.file_menu = tk.Menu(self.root, tearoff=0, bg='#2a2a2a', fg='#ffffff', activebackground='#4a4a4a', activeforeground='#ffffff', border=1, relief='solid') # 深色主题适配
         self.file_menu.add_command(label="上传文件", command=self.upload_file)
         self.file_menu.add_command(label="下载文件", command=self.download_file)
         self.file_menu.add_command(label="安装APK", command=self.install_apk_from_file)
@@ -1579,7 +1631,7 @@ class ADBInstaller:
         dialog.grab_set()  # 模态对话框
         
         # 设置背景色
-        dialog.configure(bg='#f2f2f2')
+        dialog.configure(bg='#2a2a2a') # 深色主题适配
         
         # 创建框架
         frame = ttk.Frame(dialog, padding="20")
@@ -1641,7 +1693,7 @@ class ADBInstaller:
         dialog.grab_set()
         
         # 设置背景色
-        dialog.configure(bg='#f2f2f2')
+        dialog.configure(bg='#2a2a2a') # 深色主题适配
         
         # 创建框架
         frame = ttk.Frame(dialog, padding="20")
@@ -1677,7 +1729,7 @@ class ADBInstaller:
         dialog.grab_set()
         
         # 设置背景色
-        dialog.configure(bg='#f2f2f2')
+        dialog.configure(bg='#2a2a2a') # 深色主题适配
         
         # 创建框架
         frame = ttk.Frame(dialog, padding="20")
@@ -1713,7 +1765,7 @@ class ADBInstaller:
         dialog.grab_set()
         
         # 设置背景色
-        dialog.configure(bg='#f2f2f2')
+        dialog.configure(bg='#2a2a2a') # 深色主题适配
         
         # 创建框架
         frame = ttk.Frame(dialog, padding="20")
@@ -1761,3 +1813,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = ADBInstaller(root)
     root.mainloop()
+
