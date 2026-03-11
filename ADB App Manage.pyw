@@ -6,25 +6,26 @@ import threading
 import sv_ttk # 导入 sv_ttk 库
 
 class ADBInstaller:
+    # 默认设置，包含窗口大小、主题、颜色、文件路径、连接状态等应用配置。
     DEFAULT_SETTINGS = {
-        "geometry": "700x600",
-        "default_theme": "light",
-        "winui_blue": '#0078d4',
-        "winui_light_blue": '#e6f3ff',
-        "winui_gray": '#f2f2f2',
-        "winui_dark_gray": '#e6e6e6',
-        "winui_text": '#333333',
-        "winui_border": '#e0e0e0',
-        "apk_path": "",
-        "is_connected": False,
-        "auto_connect": False,
-        "show_emoji": True,
-        "package_var_value": "",
-        "apk_var_value": "未选择文件",
-        "ip_address": "127.0.0.1",
-        "port": "58526",
-        "device_path": "/storage/emulated/0",
-        "restore_default_size": "600x600"
+        "geometry": "700x600",  # 应用程序窗口的初始尺寸。
+        "default_theme": "light",  # 应用程序的默认主题（例如，"light" 或 "dark"）。
+        "accent_color": '#0078d4',  # 主色调，用于界面元素。
+        "light_accent_color": '#e6f3ff',  # 浅色主色调。
+        "background_color": "#ffffff",  # 背景色。
+        "secondary_background_color": '#e6e6e6',  # 次要背景色。
+        "text_color": '#333333',  # 文本颜色。
+        "border_color": "#ffffff",  # 边框颜色。
+        "apk_path": "",  # 最近选择的 APK 文件路径。
+        "is_connected": False,  # 指示设备是否已连接的布尔值。
+        "auto_connect": False,  # 指示是否自动连接设备的布尔值。
+        "show_emoji": True,  # 指示是否在文件列表中显示 emoji 的布尔值。
+        "package_var_value": "",  # 包名输入框的当前值。
+        "apk_var_value": "未选择文件",  # APK 文件路径显示框的当前值。
+        "ip_address": "127.0.0.1",  # 设备IP地址。
+        "port": "58526",  # 设备端口。
+        "device_path": "/storage/emulated/0",  # 设备上的当前文件路径。
+        "restore_default_size": "700x600"  # 恢复默认窗口大小时使用的尺寸。
     }
 
     def __init__(self, root):
@@ -70,63 +71,63 @@ class ADBInstaller:
         self.style = ttk.Style()
         
         # 主色调 - WinUI风格的蓝色
-        winui_blue = self.DEFAULT_SETTINGS["winui_blue"]
-        winui_light_blue = self.DEFAULT_SETTINGS["winui_light_blue"]
-        winui_gray = self.DEFAULT_SETTINGS["winui_gray"]
-        winui_dark_gray = self.DEFAULT_SETTINGS["winui_dark_gray"]
-        winui_text = self.DEFAULT_SETTINGS["winui_text"]
-        winui_border = self.DEFAULT_SETTINGS["winui_border"]
+        accent_color = self.DEFAULT_SETTINGS["accent_color"]
+        light_accent_color = self.DEFAULT_SETTINGS["light_accent_color"]
+        background_color = self.DEFAULT_SETTINGS["background_color"]
+        secondary_background_color = self.DEFAULT_SETTINGS["secondary_background_color"]
+        text_color = self.DEFAULT_SETTINGS["text_color"]
+        border_color = self.DEFAULT_SETTINGS["border_color"]
         
         # 配置Tkinter默认对话框的样式
         # self.root.option_add('*Dialog.msg.font', 'Segoe UI 10') # 交给 sv_ttk 处理主题
         # self.root.option_add('*Dialog.btn.font', 'Segoe UI 10') # 交给 sv_ttk 处理主题
-        # self.root.option_add('*Dialog.background', winui_gray) # 交给 sv_ttk 处理主题
-        # self.root.option_add('*Dialog.foreground', winui_text) # 交给 sv_ttk 处理主题
-        # self.root.option_add('*Dialog.button.background', winui_gray) # 交给 sv_ttk 处理主题
-        # self.root.option_add('*Dialog.button.foreground', winui_text) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.background', background_color) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.foreground', text_color) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.button.background', background_color) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.button.foreground', text_color) # 交给 sv_ttk 处理主题
         # self.root.option_add('*Dialog.button.borderwidth', 1) # 交给 sv_ttk 处理主题
         # self.root.option_add('*Dialog.button.relief', 'flat') # 交给 sv_ttk 处理主题
-        # self.root.option_add('*Dialog.button.highlightbackground', winui_gray) # 交给 sv_ttk 处理主题
+        # self.root.option_add('*Dialog.button.highlightbackground', background_color) # 交给 sv_ttk 处理主题
         
         # 配置全局样式
         # self.style.configure('.',
         #                    font=('Segoe UI', 10),
-        #                    foreground=winui_text,
-        #                    background=winui_gray)
+        #                    foreground=text_color,
+        #                    background=background_color)
         
         # 配置按钮样式
         # self.style.configure('TButton',
         #                    padding=8,
         #                    relief="flat",
-        #                    background=winui_gray,
-        #                    foreground=winui_text,
+        #                    background=background_color,
+        #                    foreground=text_color,
         #                    borderwidth=1,
-        #                    bordercolor=winui_border)
+        #                    bordercolor=border_color)
         
         # 按钮悬停效果
         # self.style.map('TButton',
-        #               background=[('active', winui_dark_gray)],
-        #               bordercolor=[('active', winui_blue)])
+        #               background=[('active', secondary_background_color)],
+        #               bordercolor=[('active', accent_color)])
         
         # 配置标签样式
         # self.style.configure('TLabel',
         #                    padding=6,
-        #                    foreground=winui_text,
-        #                    background=winui_gray)
+        #                    foreground=text_color,
+        #                    background=background_color)
         
         # 配置输入框样式
         # self.style.configure('TEntry',
         #                    padding=6,
         #                    relief="flat",
         #                    borderwidth=1,
-        #                    bordercolor=winui_border,
+        #                    bordercolor=border_color,
         #                    background='white')
         
         # 配置标签框架样式
         # self.style.configure('TLabelframe',
         #                    padding=10,
-        #                    foreground=winui_text,
-        #                    background=winui_gray)
+        #                    foreground=text_color,
+        #                    background=background_color)
         
         # self.style.configure('TLabelframe.Label',
         #                    font=('Segoe UI', 10, 'bold'),
@@ -134,27 +135,27 @@ class ADBInstaller:
         
         # 配置笔记本（选项卡）样式
         # self.style.configure('TNotebook',
-        #                    background=winui_gray)
+        #                    background=background_color)
         
         # self.style.configure('TNotebook.Tab',
         #                    padding=3,
         #                    font=('Segoe UI', 10),
-        #                    background=winui_dark_gray,
-        #                    foreground=winui_text)
+        #                    background=secondary_background_color,
+        #                    foreground=text_color)
         
         # 选项卡选中效果
         # self.style.map('TNotebook.Tab',
         #               background=[('selected', 'white')],
-        #               foreground=[('selected', winui_blue)])
+        #               foreground=[('selected', accent_color)])
         
         # 配置滚动条样式
         # self.style.configure('Vertical.TScrollbar',
-        #                    background=winui_gray,
-        #                    bordercolor=winui_border)
+        #                    background=background_color,
+        #                    bordercolor=border_color)
         
         # self.style.configure('Horizontal.TScrollbar',
-        #                    background=winui_gray,
-        #                    bordercolor=winui_border) # 交给 sv_ttk 处理主题
+        #                    background=background_color,
+        #                    bordercolor=border_color) # 交给 sv_ttk 处理主题
         
         # 创建主框架
         self.main_frame = ttk.Frame(root, padding="10")
