@@ -1,4 +1,4 @@
-# ADB App Manage
+# Py ADB Manage
 ## 不止管理。
 ### 超强应用管理
 - 查看已安装应用。
